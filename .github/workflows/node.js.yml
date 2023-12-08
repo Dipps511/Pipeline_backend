@@ -45,9 +45,17 @@ jobs:
       RUNNER_LABEL: prod-runner
 
     steps:
+      # - name: Manual Approval
+      #   uses: Dipps511/Pipeline_backend@v1
+      #   with:
+      #     secret: ${{ github.TOKEN }}
+      #     approvers: Dipps511
+
       - name: Manual Approval
-        uses: Dipps511/Pipeline_backend@v1
+        uses: actions/checkout@v3
         with:
+          repository: Dipps511/Pipeline_backend
+          path: Pipeline_backend
           secret: ${{ github.TOKEN }}
           approvers: Dipps511
           
