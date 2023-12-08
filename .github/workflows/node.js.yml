@@ -42,7 +42,7 @@ jobs:
       matrix:
         node-version: [12.x]
     env:
-      RUNNER_LABEL: prod-runner
+      RUNNER_LABEL: prod2
       
     steps:
       # - uses: trstringer/manual-approval@v1
