@@ -35,31 +35,29 @@ jobs:
           npm run build --if-present
           sudo pm2 restart backend
 
-  # build-and-deploy-prod:
-  #   runs-on: self-hosted
-  #   if: github.ref == 'refs/heads/main'
-  #   strategy:
-  #     matrix:
-  #       node-version: [12.x]
-  #   container:
-  #     image: ubuntu-latest
-  #   env:
-  #     RUNNER_LABEL: prod-runner
+  build-and-deploy-prod:
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        node-version: [12.x]
+    env:
+      RUNNER_LABEL: prod-runner
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #         cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-  #     - name: Install dependencies
-  #       run: |
-  #         npm i
-  #         npm ci
+      - name: Install dependencies
+        run: |
+          npm i
+          npm ci
 
-  #     - name: Build for production
-  #       run: npm run build-prod
+      - name: Build for production
+        run: npm run build
