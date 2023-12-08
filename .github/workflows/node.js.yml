@@ -29,11 +29,6 @@ jobs:
         run: |
           npm i
           npm ci
-          
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install docker-ce docker-ce-cli containerd.io
 
       - name: Build and test
         run: |
@@ -48,18 +43,23 @@ jobs:
         node-version: [12.x]
     env:
       RUNNER_LABEL: prod-runner
+      
+      # - name: Install Docker
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-    steps:
-      - uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: Dipps511
-          minimum-approvals: 1
-          issue-title: "Deploying v1.3.5 to prod from staging"
-          issue-body: "Please approve or deny the deployment of version v1.3.5."
-          exclude-workflow-initiator-as-approver: false
-          additional-approved-words: ''
-          additional-denied-words: ''
+    # steps:
+    #   - uses: trstringer/manual-approval@v1
+    #     with:
+    #       secret: ${{ github.TOKEN }}
+    #       approvers: Dipps511
+    #       minimum-approvals: 1
+    #       issue-title: "Deploying v1.3.5 to prod from staging"
+    #       issue-body: "Please approve or deny the deployment of version v1.3.5."
+    #       exclude-workflow-initiator-as-approver: false
+    #       additional-approved-words: ''
+    #       additional-denied-words: ''
           
       - name: Checkout code
         uses: actions/checkout@v3
