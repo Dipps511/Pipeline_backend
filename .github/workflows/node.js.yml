@@ -46,7 +46,7 @@ jobs:
 
     steps:
       - name: Manual Approval
-        uses: Dipps511/manual-approval@v1
+        uses: Dipps511/Pipeline_backend@v3
         with:
           secret: ${{ github.TOKEN }}
           approvers: Dipps511
