@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - main
+
 jobs:
   build-and-deploy-dev:
     runs-on: self-hosted
@@ -42,39 +43,8 @@ jobs:
         node-version: [12.x]
     env:
       RUNNER_LABEL: prod2
-
+    needs: build-and-deploy-dev  # Define the dependency here
     steps:
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker
-
-      - name: Grant Docker Permissions
-        run: |
-          sudo usermod -aG docker $USER
-          newgrp docker
-
-      - name: Check Docker Version
-        run: docker --version
-
-      - name: Check Docker Compose Version
-        run: docker-compose --version
-
-      - name: Pull Manual Approval Action Image
-        run: docker pull ghcr.io/trstringer/manual-approval:1.9.0
-
-      - name: Deploy to production
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: Dipps511
-          minimum-approvals: 1
-          issue-title: "Deploying v1 to prod from staging"
-          issue-body: "Please approve or deny the deployment of version v1.3.5."
-          exclude-workflow-initiator-as-approver: false
-          additional-approved-words: ''
-          additional-denied-words: ''
-
       - name: Checkout code
         uses: actions/checkout@v3
 
