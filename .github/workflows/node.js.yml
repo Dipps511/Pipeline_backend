@@ -1,0 +1,75 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build-and-deploy-dev:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [12.x]
+    env:
+      RUNNER_LABEL: dev-runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm i
+          npm ci
+
+      - name: Build and test
+        run: |
+          npm run build --if-present
+          sudo pm2 restart backend
+
+  build-and-deploy-prod:
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        node-version: [12.x]
+    env:
+      RUNNER_LABEL: prod2
+    steps:
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: Dipps511
+          minimum-approvals: 1
+          issue-title: "Deploying v1 to prod from staging"
+          issue-body: "Please approve or deny the deployment of version v1.3.5."
+          exclude-workflow-initiator-as-approver: false
+          additional-approved-words: ''
+          additional-denied-words: ''
+          
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm i
+          npm ci
+
+      - name: Build for production
+        run: |
+          npm run build --if-present
+          sudo pm2 restart backend
