@@ -61,7 +61,6 @@ jobs:
 
       - name: Deploy to production
         runs-on: self-hosted
-
         steps:
           - name: Manual Approval
             uses: trstringer/manual-approval@v1
