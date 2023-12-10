@@ -34,7 +34,6 @@ jobs:
           npm run build --if-present
           sudo pm2 restart backend
 
-jobs:
   build-and-deploy-prod:
     runs-on: self-hosted
     if: github.ref == 'refs/heads/main'
