@@ -63,7 +63,8 @@ jobs:
         runs-on: self-hosted
 
         steps:
-          - uses: trstringer/manual-approval@v1
+          - name: Manual Approval
+            uses: trstringer/manual-approval@v1
             with:
               secret: ${{ github.TOKEN }}
               approvers: Dipps511
