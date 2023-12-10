@@ -7,34 +7,6 @@ on:
       - main
 
 jobs:
-  build-and-deploy-dev:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        node-version: [12.x]
-    env:
-      RUNNER_LABEL: dev-runner
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: |
-          npm i
-          npm ci
-
-      - name: Build and test
-        run: |
-          npm run build --if-present
-          sudo pm2 restart backend
-
   build-and-deploy-prod:
     runs-on: self-hosted
     if: github.ref == 'refs/heads/main'
@@ -43,8 +15,29 @@ jobs:
         node-version: [12.x]
     env:
       RUNNER_LABEL: prod2
+
     steps:
-      - uses: trstringer/manual-approval@v1
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker
+
+      - name: Grant Docker Permissions
+        run: |
+          sudo usermod -aG docker $USER
+          newgrp docker
+
+      - name: Check Docker Version
+        run: docker --version
+
+      - name: Check Docker Compose Version
+        run: docker-compose --version
+
+      - name: Pull Manual Approval Action Image
+        run: docker pull ghcr.io/trstringer/manual-approval:1.9.0
+
+      - name: Deploy to production
+        uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.TOKEN }}
           approvers: Dipps511
@@ -54,7 +47,7 @@ jobs:
           exclude-workflow-initiator-as-approver: false
           additional-approved-words: ''
           additional-denied-words: ''
-          
+
       - name: Checkout code
         uses: actions/checkout@v3
 
