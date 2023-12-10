@@ -43,7 +43,7 @@ jobs:
         node-version: [12.x]
     env:
       RUNNER_LABEL: prod2
-    needs: build-and-deploy-dev  # Define the dependency here
+    needs: build-and-deploy-dev  
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
